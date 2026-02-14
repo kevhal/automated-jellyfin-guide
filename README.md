@@ -231,6 +231,29 @@ Replace /path/to/media/tv & /path/to/media/movies with the directories you creat
 
 Make sure that user has read-write permissions for the media directories. Sonarr and Radarr are going to try to be creating folders and files in there when they copy or hard link files over. You can do this with the following command: ```chmod -r +rw /path/to/media```
 
+
+# Jellyseerr
+```
+jellyseerr:
+    image: ghcr.io/fallenbagel/jellyseerr:latest
+    init: true
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Oslo
+    ports:
+      - 5055:5055
+    volumes:
+      - /Users/kevinmentzonihalvarsson/Downloads/jellyseerr:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    restart: unless-stopped
+```
+
 # Start it up!
 
 Run this command to boot up all your services! Remember to go back and update your qBittorrent settings after this.
